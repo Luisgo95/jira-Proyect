@@ -21,27 +21,41 @@ class UserSerializer(serializers.ModelSerializer):
             'password',
             'tipo'
             )
+class ReadUserSerializer(serializers.ModelSerializer):
 
+    #profile = ProfileSerializer(required=False)
+    #tipo=TipoUsuarioModelSerializer()
 
+    class Meta:
+        model = Account
+        fields = (
+      
+            'email',
+ 
+            'password',
+            )
 
 class UserLoginSerializer(serializers.Serializer):
-    """"User login serializer
+     """"User login serializer
+     Handel the login reques data"""
+     email = serializers.EmailField()
+     password = serializers.CharField(min_length=2, max_length=64)
 
-    Handel the login reques data"""
+     def validate(self,data):
+         user = authenticate(email=data['email'], password=data['password'])
 
-    email = serializers.EmailField()
-    password = serializers.CharField(min_length=2, max_length=64)
-
-    def validate(self,data):
-        user = authenticate(email=data['email'], password=data['password'])
-        if not user:
+         if not user:
             
-            raise serializers.ValidationError('Holis Invalid credentials')
+             raise serializers.ValidationError('Holis Invalid credentials')
         # if not user.is_verified:
         #     raise serializers.ValidationError('Account is not active yet :( ')
-        self.context['user'] = user
-        return data
+         self.context['user'] = user
+         data={
+             "nombre": user.first_name,
+             "tipo" : user.tipo,
+         }
+         return data
 
-    def create(self,data):
+     def create(self,data):
         token, created = Token.objects.get_or_create(user = self.context['user'])
         return self.context['user'], token.key

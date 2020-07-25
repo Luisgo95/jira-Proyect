@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 from rest_framework import status, filters, viewsets
 from rest_framework.response import Response
 from jira.serializers import s_users
-from jira.serializers.s_users import UserSerializer ,UserLoginSerializer
+from jira.serializers.s_users import UserSerializer ,UserLoginSerializer,ReadUserSerializer
 from jira.models.m_users import Account
 
 
@@ -24,10 +24,13 @@ class UsuariosViewSet(viewsets.ModelViewSet):
     def login(self, request):
         serializer = UserLoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.save()
+        user,token = serializer.save()
+        print(serializer)
+        print(user)
         data = {
             'user': UserSerializer(user).data,
-            'access_token': 'token'
+            'tipo' :"as",
+            'access_token': token
         }
         return Response(data, status=status.HTTP_201_CREATED)  
 
