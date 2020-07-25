@@ -7,7 +7,7 @@ from jira.models.m_users import Account
 
 
 
-class TipoUsuarioViewSet(viewsets.ModelViewSet):
+class UsuariosViewSet(viewsets.ModelViewSet):
     queryset = Account.objects.all()
 
     # filter_backends = (DjangoFilterBackend, filters.SearchFilter)
