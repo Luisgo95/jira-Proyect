@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 from rest_framework import status, filters, viewsets
 from rest_framework.response import Response
 from jira.serializers import s_users
-from jira.serializers.s_users import UserSerializer
+from jira.serializers.s_users import UserSerializer ,UserLoginSerializer
 from jira.models.m_users import Account
 
 
@@ -19,6 +19,19 @@ class UsuariosViewSet(viewsets.ModelViewSet):
     queryset = Account.objects.all()
     serializer_class = s_users.UserSerializer
 
+    @action(detail=False, methods=['post'])
+    #signup es la etiqueta de la url asi lo redirigue asia aca... 
+    def login(self, request):
+        serializer = UserLoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        data = {
+            'user': UserSerializer(user).data,
+            'access_token': 'token'
+        }
+        return Response(data, status=status.HTTP_201_CREATED)  
+
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -31,15 +44,4 @@ class UsuariosViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save()
-
-    @action(detail=False, methods=['post'])
-    #signup es la etiqueta de la url asi lo redirigue asia aca... 
-    def login(self, request):
-        serializer = UserSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        data = {
-            'user': s_users.UserSerializer(user).data,
-            'access_token': 'token'
-        }
-        return Response(data, status=status.HTTP_201_CREATED)    
+  

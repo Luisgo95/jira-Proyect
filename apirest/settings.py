@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'jira',
+    "rest_framework",
+    'rest_framework.authtoken',
 ]
 AUTH_USER_MODEL = 'jira.Account'
 MIDDLEWARE = [
