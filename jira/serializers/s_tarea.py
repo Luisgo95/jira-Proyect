@@ -6,4 +6,10 @@ class TareaModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tarea
-        fields = '__all__'
+        fields = (
+            'nombre',
+            'descripcion',
+            'responsable',
+            'informador',
+            'estado',
+        )

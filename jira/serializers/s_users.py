@@ -6,7 +6,7 @@ from jira.models.m_users import Account
 class UserSerializer(serializers.ModelSerializer):
 
     #profile = ProfileSerializer(required=False)
-    #tipo=TipoUsuarioModelSerializer(read_only=True)
+    #tipo=TipoUsuarioModelSerializer()
 
     class Meta:
         model = Account
