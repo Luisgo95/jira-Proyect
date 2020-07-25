@@ -25,12 +25,10 @@ class UsuariosViewSet(viewsets.ModelViewSet):
         serializer = UserLoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user,token = serializer.save()
-        print(serializer)
-        print(user)
+ 
         data = {
-            'user': UserSerializer(user).data,
-            'tipo' :"as",
-            'access_token': token
+            'access_token': token,
+            'user': ReadUserSerializer(user).data
         }
         return Response(data, status=status.HTTP_201_CREATED)  
 

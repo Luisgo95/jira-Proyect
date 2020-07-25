@@ -29,10 +29,10 @@ class ReadUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         fields = (
-      
+            'username',
             'email',
- 
-            'password',
+            'tipo',
+
             )
 
 class UserLoginSerializer(serializers.Serializer):
@@ -50,10 +50,7 @@ class UserLoginSerializer(serializers.Serializer):
         # if not user.is_verified:
         #     raise serializers.ValidationError('Account is not active yet :( ')
          self.context['user'] = user
-         data={
-             "nombre": user.first_name,
-             "tipo" : user.tipo,
-         }
+        
          return data
 
      def create(self,data):
