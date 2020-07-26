@@ -19,3 +19,13 @@ class TareaViewSet(viewsets.ModelViewSet):
     serializer_class = s_tarea.TareaModelSerializer
 
     # @action(detail=True, methods=['post'])    
+    # def perform_create(self,serializer):
+    #     tarea = serializer.save()
+    #     user = self.request.user
+    #     Membership.objects.create(
+    #         user=user,
+    #         profile = profile,
+    #         circle=circle,
+    #         is_admin= True,
+    #         remaining_invitations =10
+    #     )
