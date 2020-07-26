@@ -7,6 +7,7 @@ class TareaModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tarea
         fields = (
+            'id',
             'nombre',
             'descripcion',
             'responsable',
