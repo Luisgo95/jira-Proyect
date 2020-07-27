@@ -8,8 +8,8 @@ class Tarea(models.Model):
     descripcion =  models.CharField(max_length=256)
     responsable = models.ForeignKey('Account', on_delete=models.CASCADE,related_name='responsable')
     informador = models.ForeignKey('Account', on_delete=models.CASCADE,related_name='informador')
-    estado = models.CharField(max_length=256, default="Por Hacer")
-
+    #estado = models.CharField(max_length=256, default="Por Hacer")
+    estado = models.ForeignKey('EstadosTarea', default=1,on_delete=models.CASCADE,related_name='estado')
     activo = models.BooleanField(default=True)
     creado = models.DateTimeField(auto_now_add=True)
     modificado = models.DateTimeField(auto_now=True)
