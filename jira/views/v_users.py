@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from jira.serializers import s_users
 from jira.serializers.s_users import UserSerializer ,UserLoginSerializer,ReadUserSerializer
 from jira.models.m_users import Account
-from jira.utils.permissions import IsAccountOwner ,permissionUpdate
+from jira.utils.permissions import IsAccountOwner ,permissionUpdate, permissionCreateUser
 from jira.permissions.p_users import UserPermission
 from rest_framework.permissions import(
     AllowAny,
@@ -25,8 +25,10 @@ class UsuariosViewSet(viewsets.ModelViewSet):
     #permission_classes = (permissions.IsAuthenticated)
 
     def get_permissions(self):
-        if self.action in ['create','login']:
+        if self.action in ['login']:
             permissions =[AllowAny]
+        if self.action in ['create']:
+            permissions = [permissionCreateUser]
         if self.action in ['retrieve','list']: 
            permissions = [IsAuthenticated,UserPermission, IsAccountOwner]
         if self.action in ['update','partial_update']: 

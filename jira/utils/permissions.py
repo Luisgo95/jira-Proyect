@@ -9,7 +9,7 @@ class IsAccountOwner(BasePermission):
         return request.user == obj
 
 class permissionUpdate(BasePermission):
-    def has_permission(self, request,view):
+    def has_object_permission(self, request,view,obj):
         if(request.user.tipo.id==1):
             respuesta= True
         else:
@@ -36,6 +36,21 @@ class permissionUpdateTareas(BasePermission):
         except Tarea.DoesNotExist:
             return False
      
+class permissionCreateUser(BasePermission):
+    def has_permission(self,request,view):
+        if(request.user.tipo==1):
+            respuesta= True
+        else:
+            respuesta= False
+        return respuesta
+
+class permissionAdmin(BasePermission):
+    def has_permission(self, request,view):
+        if(request.user.tipo.id==1):
+            respuesta= True
+        else:
+            respuesta= False
+        return respuesta
 
 # class permissionViewTarea(BasePermission):
 #     def has_object_permission(self, request,view,obj):

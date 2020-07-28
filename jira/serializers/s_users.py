@@ -14,6 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         fields = (
+            'id',
             'username',
             'first_name',
             'last_name',
@@ -46,7 +47,7 @@ class UserLoginSerializer(serializers.Serializer):
 
          if not user:
             
-             raise serializers.ValidationError('Holis Invalid credentials')
+             raise serializers.ValidationError('Invalid credentials')
         # if not user.is_verified:
         #     raise serializers.ValidationError('Account is not active yet :( ')
          self.context['user'] = user

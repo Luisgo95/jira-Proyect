@@ -4,7 +4,7 @@ from rest_framework import status, filters, viewsets
 
 from jira.serializers import s_tipo_usuario
 from jira.models.m_tipo_usuario import TipoUsuario
-
+from jira.utils.permissions import permissionAdmin
 
 
 class TipoUsuarioViewSet(viewsets.ModelViewSet):
@@ -17,5 +17,8 @@ class TipoUsuarioViewSet(viewsets.ModelViewSet):
 
     queryset = TipoUsuario.objects.all()
     serializer_class = s_tipo_usuario.TipoUsuarioModelSerializer
-
+    def get_permissions(self):
+        if self.action in ['create','update','list','delete','partial_update']:
+            permissions = [permissionAdmin]
+        return [p() for p in permissions]
     # @action(detail=True, methods=['post'])    
