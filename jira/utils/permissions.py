@@ -38,7 +38,7 @@ class permissionUpdateTareas(BasePermission):
      
 class permissionCreateUser(BasePermission):
     def has_permission(self,request,view):
-        if(request.user.tipo==1):
+        if(request.user.tipo.id==1):
             respuesta= True
         else:
             respuesta= False

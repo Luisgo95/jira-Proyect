@@ -27,7 +27,7 @@ class UsuariosViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action in ['login']:
             permissions =[AllowAny]
-        if self.action in ['create']:
+        if self.action in ['create','destroy']:
             permissions = [permissionCreateUser]
         if self.action in ['retrieve','list']: 
            permissions = [IsAuthenticated,UserPermission, IsAccountOwner]
@@ -97,4 +97,7 @@ class UsuariosViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save()
 
+
+    # def destroy(self, request, pk=None):
+    #     pass
 
