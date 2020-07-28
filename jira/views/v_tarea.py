@@ -6,7 +6,9 @@ from jira.serializers import s_tarea
 from jira.serializers.s_tarea import TareaModelSerializer
 from jira.models.m_tarea import Tarea
 from django.db.models import Count
-from django.db.models import Sum,Min,Max, Avg,Q
+from django.db.models import Sum,Min,Max, Avg,Q,F
+from django.db.models import FloatField,DecimalField
+from django.db.models.functions import Cast
 
 #Prueba RSPONSE JSON serial
 from django.http import JsonResponse
@@ -30,7 +32,7 @@ class TareaViewSet(viewsets.ModelViewSet):
     serializer_class = s_tarea.TareaModelSerializer
 
     def get_permissions(self):
-        if self.action in['list','ProgressById']:
+        if self.action in['list','ProgressById','percentage']:
             permissions =[IsAuthenticated]
         if self.action in ['create','retrieve']:
             permissions =[permissionCreateTarea]
@@ -52,35 +54,29 @@ class TareaViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])    
     def ProgressById(self,request):
-        print("HOLA desde By ID")
-        # grupos = Count('estado', filter=Q(responsable=request.user.id))
-        # state1 = Tarea.objects.annotate(
-        #     cantidad =Count('estado'))
+        if( request.user.tipo.id==1):
+            state0 = Tarea.objects.values('estado').annotate(
+                Total=Count('estado')
+                ).order_by()
+        else:
+            state0 = Tarea.objects.values('estado').annotate(
+                Total=Count('estado')
+                ).filter(responsable=request.user.id).order_by()
+        return Response(state0)
+    
 
-        
-        # y =json.dumps(state1)
-        # print(y)
-        
-        #state01 = Tarea.objects.all().annotate(Count('estado'))
-        # state01 = Tarea.objects.values('estado').annotate(dcount=Count('estado'))
-
-        #query1=Tarea.objects.filter(responsable=request.user.id)
-
-        state0 = Tarea.objects.values('estado').annotate(
-            Total=Count('estado')
-            ).filter(responsable=request.user.id).order_by()
-
-           #filter=Q(book__rating__lte=5)
-        # state1 = Tarea.objects.filter(responsable=request.user.id,estado=1).count()
-        # state2 = Tarea.objects.filter(responsable=request.user.id,estado=2).count()
-        # state3 = Tarea.objects.filter(responsable=request.user.id,estado=3).count()
-        # data={
-        #     "PorHacer" : state0,
-        #     "Haciendo": state2,
-        #     "Hecho": state3
-
-        # }
-        # #serializer = TareaModelSerializer(queryset, many=True)
+    @action(detail=False, methods=['get'])    
+    def percentage(self,request):
+        if( request.user.tipo.id==1):
+            Total = Tarea.objects.all().count()
+            Divisible= Total/100.0
+            state0 = Tarea.objects.values('estado').annotate(
+                Porcentaje =Cast((Count('estado')/Divisible), DecimalField())
+                )
+        else:
+            state0={
+                "message":"you Dont permissions"
+            }
         return Response(state0)
 
     # @action(detail=True, methods=['post'])    
